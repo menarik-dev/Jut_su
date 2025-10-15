@@ -1,15 +1,17 @@
-"""
-        1. Testing login functionality with valid credentials
-        2. Testing login functionality with invalid credentials
-        3. Testing login functionality with empty fields
-        4. Testing login functionality with SQL injection in fields
-"""
 import os
 import pytest
+import allure
+from allure_commons.types import Severity
+
 from PageObjects.MainMenuPageObject import MainMenuPageObject
 from Utils.TestDataGenerator import TestGenerateData
 
+@allure.epic("User Management")
+@allure.feature("Authorization functionality")
 class TestAuthorization:
+    @allure.story("Login with valid data and check profile link")
+    @allure.severity("Critical")
+    @allure.tag("smoke", "positive")
     def test_JTA_1_LoginValidData(self, driver_setup):
         # Login
         main_menu = MainMenuPageObject(driver=driver_setup)
@@ -25,6 +27,8 @@ class TestAuthorization:
         assert profile_page.IsProfileTitleDisplayed() is True
         assert "/user/JamesGrey" in profile_page.GetPageUrl()
 
+    @allure.story("Verify profile data after successful login")
+    @allure.severity("Normal")
     def test_JTA_2_CheckProfileData(self, driver_setup):
         main_menu = MainMenuPageObject(driver=driver_setup)
         sign_in_page = main_menu.SignIn()
@@ -37,6 +41,8 @@ class TestAuthorization:
             "Profile title is not as expected"
         assert profile_page.IsLogoutButtonDisplayed() is True, "Logout button is not appeared"
 
+    @allure.story("Login with random invalid credentials")
+    @allure.severity("Blocker")
     def test_JTA_3_LoginInvalidData(self,driver_setup):
         main_menu = MainMenuPageObject(driver=driver_setup)
         sign_in_page = main_menu.SignIn()
@@ -55,6 +61,8 @@ class TestAuthorization:
         (os.getenv("VALID_LOGIN"),"")
     ])
 
+    @allure.story("Login with empty or missing data fields")
+    @allure.severity("Major")
     def test_JTA_4_LoginEmptyDataFields(self,driver_setup, login, password):
         main_menu = MainMenuPageObject(driver=driver_setup)
         sign_in_page = main_menu.SignIn()
@@ -74,6 +82,9 @@ class TestAuthorization:
         (os.getenv("VALID_LOGIN"), " ' OR '1'='1 ")
     ])
 
+    @allure.story("Prevent SQL injection in login fields")
+    @allure.severity("Critical")  # Безопасность критична
+    @allure.tag("security", "negative")
     def test_JTA_5_SQLInjectionInFields(self,driver_setup, login, password):
         main_menu = MainMenuPageObject(driver=driver_setup)
         sign_in_page = main_menu.SignIn()
