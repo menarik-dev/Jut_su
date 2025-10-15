@@ -1,20 +1,6 @@
-# 1. Виртуальное окружение
-venv/
-.venv/
-env/
-
-# 2. Файлы с секретными переменными
+.pytest_chache
+.idea
+*.iml
 .env
-.env.local
-
-# 3. Файлы кэша Python
-__pycache__/
-*.pyc
-*.pyd
-
-# 4. Логи и результаты тестов
-logs/
-*.log
-*.sqlite
-report/
-allure-results/
+report
+allure-results
