@@ -28,22 +28,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r ./requirements.txt
 
-      - name: Set Pytest Marker
-        id: set_marker
-        run: |
-          # В зависимости от выбора пользователя, определяем команду pytest
-          if [ "${{ github.event.inputs.test_type }}" == "positive" ]; then
-            echo "MARKER=positive" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.inputs.test_type }}" == "negative" ]; then
-            echo "MARKER=negative" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.inputs.test_type }}" == "all" ]; then
-            # Запуск всех тестов (без маркера)
-            echo "MARKER=" >> $GITHUB_OUTPUT
-          else
-            # Если выбрано 'skip_tests' или любое другое значение
-            echo "MARKER=skip_tests" >> $GITHUB_OUTPUT
-          fi
-
       - name: Run Selected UI-tests
         id: run_tests
         env:
@@ -53,15 +37,11 @@ jobs:
           EXPECTED_PROFILE_TITLE:  ${{secrets.EXPECTED_PROFILE_TITLE}}
           EXPECTED_ERROR_MESSAGE: ${{secrets.EXPECTED_ERROR_MESSAGE}}
         run: |
-          TESTS_TYPE= "${{github.event.inputs.test_type}}"
-          ALLURE_RESULTS_DIR =allure-results
+          TESTS_TYPE="${{github.event.inputs.test_type}}"
+          ALLURE_RESULTS_DIR=allure-results
 
           echo "ALLURE_REPORT_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          if [ "$TEST_TYPE" == "skip_tests" ]; then
-            echo "::notice file=info.txt::Tests skipped by user choice."
-            exit 0
-          fi
-
+          
           rm -rf $ALLURE_RESULTS_DIR
           mkdir -p $ALLURE_RESULTS_DIR
 
@@ -73,6 +53,9 @@ jobs:
             pytest -m positive --alluredir=$ALLURE_RESULTS_DIR
           elif [ "$TEST_TYPE" == "negative" ]; then
             pytest -m negative --alluredir=$ALLURE_RESULTS_DIR
+          else
+            echo "Ivalid test type selected $TESTS_TYPE"
+            exit 1
           fi
 
           exit_code=$?
@@ -80,13 +63,14 @@ jobs:
             echo "::warning file=run_tests.sh,line=1::Pytest completed with failures (Exit code $exit_code)."
             # Продолжаем, чтобы сгенерировать отчет
           fi
+          exit $exit_code
           
       - name: Build Allure Report
         if: always()
         uses: simple-actions/allure-report-action@v1.0.0
         with:
           allure_results_path: allure-results
-          gh-pages_branch: gh-pages
+          # gh-pages_branch: gh-pages
 
       - name: Upload Allure Report
         if: always()
@@ -102,3 +86,9 @@ jobs:
           name: allure-report-${{ github.event.inputs.test_type }}
           path: allure-report
         
+      - name: Deploy Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{secrets.GH_PAGES_TOKEN}}
+          publish_dir: allure-report
