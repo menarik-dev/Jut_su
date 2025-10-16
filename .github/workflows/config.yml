@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       test_type:
-        description: "Выберите тип тестов для запуска";
+        description: "Выберите тип тестов для запуска"
           required: true
           default: "positive"
           type: choice
