@@ -35,5 +35,5 @@ def driver_setup():
 def foreachtest(driver_setup):
     driver_setup.delete_all_cookies()
     driver_setup.get(os.getenv("BASE_URL"))
-    WaitUntil.WaitPageLoaded(webdriver=driver_setup, timeInSeconds=20)
+    WaitUntil.WaitPageLoaded(webdriver=driver_setup, timeInSeconds=30)
     yield

@@ -12,6 +12,7 @@ class TestAuthorization:
     @allure.story("Login with valid data and check profile link")
     @allure.severity("Critical")
     @allure.tag("smoke", "positive")
+    @pytest.mark.positive
     def test_JTA_1_LoginValidData(self, driver_setup):
         # Login
         main_menu = MainMenuPageObject(driver=driver_setup)
@@ -29,6 +30,7 @@ class TestAuthorization:
 
     @allure.story("Verify profile data after successful login")
     @allure.severity("Normal")
+    @pytest.mark.positive
     def test_JTA_2_CheckProfileData(self, driver_setup):
         main_menu = MainMenuPageObject(driver=driver_setup)
         sign_in_page = main_menu.SignIn()
@@ -43,6 +45,7 @@ class TestAuthorization:
 
     @allure.story("Login with random invalid credentials")
     @allure.severity("Blocker")
+    @pytest.mark.negative
     def test_JTA_3_LoginInvalidData(self,driver_setup):
         main_menu = MainMenuPageObject(driver=driver_setup)
         sign_in_page = main_menu.SignIn()
@@ -63,6 +66,7 @@ class TestAuthorization:
 
     @allure.story("Login with empty or missing data fields")
     @allure.severity("Major")
+    @pytest.mark.negative
     def test_JTA_4_LoginEmptyDataFields(self,driver_setup, login, password):
         main_menu = MainMenuPageObject(driver=driver_setup)
         sign_in_page = main_menu.SignIn()
@@ -85,6 +89,7 @@ class TestAuthorization:
     @allure.story("Prevent SQL injection in login fields")
     @allure.severity("Critical")  # Безопасность критична
     @allure.tag("security", "negative")
+    @pytest.mark.negative
     def test_JTA_5_SQLInjectionInFields(self,driver_setup, login, password):
         main_menu = MainMenuPageObject(driver=driver_setup)
         sign_in_page = main_menu.SignIn()

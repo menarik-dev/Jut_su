@@ -4,14 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       test_type:
-        description: "Выберите тип тестов для запуска";
-          required: true
-          default: "positive"
-          type: choice
-          options:
+        description: 'Choose type of the tests'
+        required: true
+        default: 'positive'
+        type: choice
+        options:
           - positive
           - negative
           - all
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -26,26 +27,32 @@ jobs:
         run: sudo apt-get install google-chrome-stable
       - name: Install dependencies
         run: pip install -r ./requirements.txt
+
       - name: Set Pytest Marker
         id: set_marker
         run: |
+          # В зависимости от выбора пользователя, определяем команду pytest
           if [ "${{ github.event.inputs.test_type }}" == "positive" ]; then
             echo "MARKER=positive" >> $GITHUB_OUTPUT
           elif [ "${{ github.event.inputs.test_type }}" == "negative" ]; then
             echo "MARKER=negative" >> $GITHUB_OUTPUT
           elif [ "${{ github.event.inputs.test_type }}" == "all" ]; then
+            # Запуск всех тестов (без маркера)
             echo "MARKER=" >> $GITHUB_OUTPUT
+          else
+            # Если выбрано 'skip_tests' или любое другое значение
+            echo "MARKER=skip_tests" >> $GITHUB_OUTPUT
           fi
-      - name: Run UI-tests
+
+      - name: Run Selected UI-tests
         env:
           VALID_LOGIN: ${{secrets.VALID_LOGIN}}
           VALID_PASSWORD: ${{secrets.VALID_PASSWORD}}
         run: |
-          # Конструируем команду pytest: 'pytest -m positive', 'pytest -m negative' или просто 'pytest'
           if [ -z "${{ steps.set_marker.outputs.MARKER }}" ]; then
-            echo "Launching all tests..."
+            echo "Запуск ВСЕХ тестов..."
             pytest
           else
-            echo "Launching tests with the marker: ${{ steps.set_marker.outputs.MARKER }}..."
+            echo "Запуск тестов с маркером: ${{ steps.set_marker.outputs.MARKER }}..."
             pytest -m "${{ steps.set_marker.outputs.MARKER }}"
           fi
