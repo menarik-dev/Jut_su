@@ -5,7 +5,7 @@ on:
     inputs:
       test_type:
         description: "Выберите тип тестов для запуска";
-          required: true
+          required: True
           default: "positive"
           type: choice
           options:
