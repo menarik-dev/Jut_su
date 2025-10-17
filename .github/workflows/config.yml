@@ -49,13 +49,35 @@ jobs:
           VALID_LOGIN: ${{secrets.VALID_LOGIN}}
           VALID_PASSWORD: ${{secrets.VALID_PASSWORD}}
           BASE_URL: ${{secrets.BASE_URL}}
-          EXPECTED_PROFILE_TITLE:  ${{secrets.EXPECTED_PROFILE_TITLE}}
+          EXPECTED_PROFILE_TITLE: ${{secrets.EXPECTED_PROFILE_TITLE}}
           EXPECTED_ERROR_MESSAGE: ${{secrets.EXPECTED_ERROR_MESSAGE}}
         run: |
+          ALLURE_DIR="allure-results"
+          mkdir -p $ALLURE_DIR
+          
           if [ -z "${{ steps.set_marker.outputs.MARKER }}" ]; then
             echo "Запуск ВСЕХ тестов..."
-            pytest
+            pytest --alluredir=$ALLURE_DIR
           else
             echo "Запуск тестов с маркером: ${{ steps.set_marker.outputs.MARKER }}..."
-            pytest -m "${{ steps.set_marker.outputs.MARKER }}"
+            pytest -m "${{ steps.set_marker.outputs.MARKER }}" --alluredir=$ALLURE_DIR
           fi
+
+      - name: Generate Allure Report
+        run: |
+          echo "Installing Allure CLI"
+          sudo apt-get install opendjk-17-jdk
+          sudo wget -O /tmp/allure.zip https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip
+          sudo unzip /tmp/allure.zip -d /opt/
+          sudo ln -s /opt/allure-2.27.0/bin/allure /usr/bin/allure
+          
+          echo "Generating Allure Report..."
+          allure generate allure-results --clean -o allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          token: ${{secrets.GH_PAGES_TOKEN}}
+          branch: gh-pages
+          folder: allure-report
+          clean: true
