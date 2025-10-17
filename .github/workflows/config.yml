@@ -48,6 +48,9 @@ jobs:
         env:
           VALID_LOGIN: ${{secrets.VALID_LOGIN}}
           VALID_PASSWORD: ${{secrets.VALID_PASSWORD}}
+          BASE_URL: ${{secrets.BASE_URL}}
+          EXPECTED_PROFILE_TITLE:  ${{secrets.EXPECTED_PROFILE_TITLE}}
+          EXPECTED_ERROR_MESSAGE: ${{secrets.EXPECTED_ERROR_MESSAGE}}
         run: |
           if [ -z "${{ steps.set_marker.outputs.MARKER }}" ]; then
             echo "Запуск ВСЕХ тестов..."

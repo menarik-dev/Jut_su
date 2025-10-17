@@ -13,7 +13,7 @@ load_dotenv()
 @pytest.fixture(scope='class')
 def driver_setup():
     options = Options()
-    options.add_argument("--headless")
+    options.add_argument("--headless=new")
     options.add_argument("--enable-automation")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
@@ -23,6 +23,7 @@ def driver_setup():
 
     driver = webdriver.Chrome(options=options)
     CaptchaByPass.PassCaptcha(driver=driver) # Pass captcha by javascript before page loading
+    print(os.getenv("BASE_URL"))
     driver.get(os.getenv("BASE_URL"))
 
     yield driver # передает параметр тестам
