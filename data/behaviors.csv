@@ -1,0 +1,3 @@
+"Epic","Feature","Story","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
+"User Management","Authorization functionality","Verify profile data after successful login","0","0","1","0","0"
+"User Management","Authorization functionality","Login with valid data and check profile link","0","0","1","0","0"
