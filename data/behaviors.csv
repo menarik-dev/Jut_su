@@ -1,3 +1,6 @@
 "Epic","Feature","Story","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
 "User Management","Authorization functionality","Verify profile data after successful login","0","0","1","0","0"
+"User Management","Authorization functionality","Login with empty or missing data fields","0","0","4","0","0"
+"User Management","Authorization functionality","Prevent SQL injection in login fields","0","0","3","0","0"
 "User Management","Authorization functionality","Login with valid data and check profile link","0","0","1","0","0"
+"User Management","Authorization functionality","Login with random invalid credentials","0","0","1","0","0"
