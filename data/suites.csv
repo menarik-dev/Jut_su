@@ -1,3 +1,3 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Thu Oct 30 11:41:27 UTC 2025","Thu Oct 30 11:41:30 UTC 2025","2905","UITests","test_Authorization","TestAuthorization","","","test_JTA_2_CheckProfileData",""
-"passed","Thu Oct 30 11:41:23 UTC 2025","Thu Oct 30 11:41:27 UTC 2025","4261","UITests","test_Authorization","TestAuthorization","","","test_JTA_1_LoginValidData",""
+"passed","Thu Jan 08 11:08:22 UTC 2026","Thu Jan 08 11:08:24 UTC 2026","2175","UITests","test_Authorization","TestAuthorization","","","test_JTA_1_LoginValidData",""
+"passed","Thu Jan 08 11:08:24 UTC 2026","Thu Jan 08 11:08:26 UTC 2026","1637","UITests","test_Authorization","TestAuthorization","","","test_JTA_2_CheckProfileData",""
